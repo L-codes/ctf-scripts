@@ -9,53 +9,53 @@ require 'crc'
 class RAR
   RAR_FILE_PASSWORD = 0x0004
 
-	class RAR3_HEAD < BinData::Record
-		endian :little
-		string :mark_head, :length => 7
-		string :main_head, :length => 13
-	end
+  class RAR3_HEAD < BinData::Record
+    endian :little
+    string :mark_head, :length => 7
+    string :main_head, :length => 13
+  end
 
-	class RAR3_FILE_HEAD < BinData::Record
-		endian :little
-		uint16 :crc32
-		string :ftype, :length => 1
-		uint16 :flags
-		uint16 :head_size
-		string :bytes_remaining, read_length: -> {head_size - 7}
+  class RAR3_FILE_HEAD < BinData::Record
+    endian :little
+    uint16 :crc32
+    string :ftype, :length => 1
+    uint16 :flags
+    uint16 :head_size
+    string :bytes_remaining, read_length: -> {head_size - 7}
 
     def real_crc
       CRC.crc32(to_binary_s[2..-1]) & 0xFFFF
     end
 
-		def crc_invaild? 
-			real_crc != crc32
-		end
+    def crc_invaild? 
+      real_crc != crc32
+    end
 
     def crc_recalc
       self.crc32 = real_crc
     end
 
-		def need_password?
-			flags.to_i.allbits? RAR_FILE_PASSWORD
-		end
-	end
+    def need_password?
+      flags.to_i.allbits? RAR_FILE_PASSWORD
+    end
+  end
 
-	def initialize(filename, bsize = 10485760)
-		@filename = filename
-		@bsize = bsize	
-		@mark = "\x74" # RAR File
-	end
+  def initialize(filename, bsize = 10485760)
+    @filename = filename
+    @bsize = bsize  
+    @mark = "\x74" # RAR File
+  end
 
-	def active(op)
-		f = open(@filename, 'rb+')
-		rar_head = RAR3_HEAD.read f 
+  def active(op)
+    f = open(@filename, 'rb+')
+    rar_head = RAR3_HEAD.read f 
 
-		@n = 0
-		while block = f.read(@bsize)
-			if index = block.index(@mark)
-				offset = block.size - index + 2
-				f.seek(-offset, IO::SEEK_CUR)
-				file_head = RAR3_FILE_HEAD.read f
+    @n = 0
+    while block = f.read(@bsize)
+      if index = block.index(@mark)
+        offset = block.size - index + 2
+        f.seek(-offset, IO::SEEK_CUR)
+        file_head = RAR3_FILE_HEAD.read f
 
         case op
         when :recover
@@ -72,16 +72,16 @@ class RAR
           end
 
         when :fake
-					unless file_head.crc_invaild?
-						file_head.flags ^= RAR_FILE_PASSWORD
-						data = file_head.to_binary_s
-						f.seek(-data.size, IO::SEEK_CUR)
-						f.write(data)
-						@n += 1
-					end
+          unless file_head.crc_invaild?
+            file_head.flags ^= RAR_FILE_PASSWORD
+            data = file_head.to_binary_s
+            f.seek(-data.size, IO::SEEK_CUR)
+            f.write(data)
+            @n += 1
+          end
 
         when :unlock, :lock
-					if not file_head.crc_invaild?
+          if not file_head.crc_invaild?
             if (op == :unlock and file_head.need_password?) or 
                 (op == :lock and not file_head.need_password?)
               file_head.flags ^= RAR_FILE_PASSWORD
@@ -91,16 +91,16 @@ class RAR
               f.write(data)
               @n += 1
             end
-					end
+          end
         end
 
-			end
-		end
-	rescue IOError
-	ensure
+      end
+    end
+  rescue IOError
+  ensure
     f.close
-		puts "success #{@n} flag(s) found"
-	end
+    puts "success #{@n} flag(s) found"
+  end
 
 end
 
