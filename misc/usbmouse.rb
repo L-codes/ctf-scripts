@@ -19,7 +19,6 @@ if ARGV.delete '-h'
       -move     Mouse Move
       -all      Mouse All (Default)
       -f        Force Mode (Ignore Wireshark Error)
-      -k        Keep Debug File
       -v        Verbose Mode
       -h        Help Info
   EOF
@@ -27,7 +26,6 @@ if ARGV.delete '-h'
 end
 verbose = ARGV.delete '-v'
 force   = ARGV.delete '-f'
-keep    = ARGV.delete '-k'
 left    = ARGV.delete '-left'
 right   = ARGV.delete '-right'
 move    = ARGV.delete '-move'
@@ -73,11 +71,11 @@ end
 
 cmd = "gnuplot -e \"set terminal png; plot '#{tempfile.path}'\""
 data = `#{cmd}`
-if not $?.success? or keep
+unless $?.success?
   debug_file = 'mouse_coordinate.txt'
   File.write(debug_file, File.read(tempfile.path)) # copy
   puts "[*] Debug Output: #{debug_file}"
-  abort "[!] Error `#{cmd}` "  unless $?.success?
+  abort "[!] Error `#{cmd}` "
 end
 
 File.binwrite(output, data)
