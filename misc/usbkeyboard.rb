@@ -15,30 +15,35 @@ if ARGV.delete '-h'
       cat usb_capdata.txt | ./usbkeyboard.rb
 
     Option: 
+      -f     Force Mode (Ignore Wireshark Error)
       -v     Verbose Mode
       -h     Help Info
   EOF
   exit
 end
 verbose = ARGV.delete '-v'
+force = ARGV.delete '-f'
 
 if ARGV[0] 
-  cmd = "tshark -r #{ARGV[0]} -T fields -e usb.capdata"
+  cmd = "tshark -r #{ARGV[0]} -T fields -e usb.capdata #{force ? "2>&-" : ""}"
   data = `#{cmd}`
-  abort "[!] Error `#{cmd}` " unless $?.success? and `file #{ARGV[0]}`.include? 'capture'
+  unless force
+    abort "[!] Error `#{cmd}` " unless $?.success? and `file #{ARGV[0]}`.include? 'capture'
+  end
 else
   data = ARGF
 end
 
 result = ''
 data.each_line do |line|
-  if line =~ /^(00|20):\h{2}:(\h{2})(?::\h{2}){5}$/
+  if line =~ /^(00|02|20):\h{2}:(\h{2})(?::\h{2}){5}$/   # TODO Confirm <shift> code
     shift, key = $1, $2
     keyboard = ( shift == '00' ? NormalKeys[key] : ShiftKeys[key] )
     if keyboard
+      p [keyboard, shift, key, "", line]
       result << keyboard
     else
-      puts "[-] Unknow Key : 0x#{key}" if verbose
+      puts "[-] Unknow Key : 0x#{key}  #{line}" if verbose
     end
   end
 end
