@@ -46,7 +46,7 @@ class RAR
     @mark = "\x74" # RAR File
   end
 
-  def active(op)
+  def action(op)
     f = open(@filename, 'rb+')
     rar_head = RAR3_HEAD.read f 
 
@@ -117,7 +117,7 @@ if __FILE__ == $PROGRAM_NAME
     abort "No such option '#{ARGV[0]}'" unless op
     abort "No such file '#{ARGV[1]}'"   unless File.exist? ARGV[1]
     rar = RAR.new(ARGV[1])
-    rar.active(op)
+    rar.action(op)
   else
     puts <<~EOF
     usage:
