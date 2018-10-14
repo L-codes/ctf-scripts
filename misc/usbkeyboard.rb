@@ -40,10 +40,9 @@ data.each_line do |line|
     shift, key = $1, $2
     keyboard = ( shift == '00' ? NormalKeys[key] : ShiftKeys[key] )
     if keyboard
-      p [keyboard, shift, key, "", line]
       result << keyboard
     else
-      puts "[-] Unknow Key : 0x#{key}  #{line}" if verbose
+      puts "[-] Unknow Key : 0x#{key}" if verbose
     end
   end
 end
