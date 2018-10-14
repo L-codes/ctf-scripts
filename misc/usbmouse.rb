@@ -60,7 +60,20 @@ data.each_line do |line|
 end
 
 tempfile.close
-system %|gnuplot -e "set terminal png; plot '#{tempfile.path}'" > #{output}|
-abort "[!] Error `#{cmd}` " unless $?.success?
+if tempfile.size.zero?
+  puts "[!] Mouse input not found"
+  exit
+end
+
+cmd = "gnuplot -e \"set terminal png; plot '#{tempfile.path}'\""
+data = `#{cmd}`
+unless $?.success?
+  debug_file = 'mouse_coordinate.txt'
+  File.write(debug_file, File.read(tempfile.path)) # copy
+  puts "[*] Debug Output: #{debug_file}"
+  abort "[!] Error `#{cmd}` "
+end
+
+File.binwrite(output, data)
 puts "[+] Output: #{output}"
 tempfile.unlink
