@@ -18,12 +18,16 @@ if ARGV.delete '-h'
       -right    Right Keystroke
       -move     Mouse Move
       -all      Mouse All (Default)
+      -f        Force Mode (Ignore Wireshark Error)
+      -k        Keep Debug File
       -v        Verbose Mode
       -h        Help Info
   EOF
   exit
 end
 verbose = ARGV.delete '-v'
+force   = ARGV.delete '-f'
+keep    = ARGV.delete '-k'
 left    = ARGV.delete '-left'
 right   = ARGV.delete '-right'
 move    = ARGV.delete '-move'
@@ -31,9 +35,11 @@ all     = ARGV.delete('-all') || [left, right, move].none?
 output  = (i = ARGV.index '-o') ? ARGV.slice!(2,2).last : 'mouse.png'
 
 if ARGV[0] 
-  cmd = "tshark -r #{ARGV[0]} -T fields -e usb.capdata"
+  cmd = "tshark -r #{ARGV[0]} -T fields -e usb.capdata #{force ? "2>&-" : ""}"
   data = `#{cmd}`
-  abort "[!] Error `#{cmd}` " unless $?.success? and `file #{ARGV[0]}`.include? 'capture'
+  unless force
+    abort "[!] Error `#{cmd}` " unless $?.success? and `file #{ARGV[0]}`.include? 'capture'
+  end
 else
   data = ARGF
 end
@@ -67,11 +73,11 @@ end
 
 cmd = "gnuplot -e \"set terminal png; plot '#{tempfile.path}'\""
 data = `#{cmd}`
-unless $?.success?
+if not $?.success? or keep
   debug_file = 'mouse_coordinate.txt'
   File.write(debug_file, File.read(tempfile.path)) # copy
   puts "[*] Debug Output: #{debug_file}"
-  abort "[!] Error `#{cmd}` "
+  abort "[!] Error `#{cmd}` "  unless $?.success?
 end
 
 File.binwrite(output, data)
