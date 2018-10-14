@@ -42,5 +42,10 @@ data.each_line do |line|
     end
   end
 end
-puts "[+] Result: " if verbose
-puts result
+
+if result.empty?
+  puts "[!] Keyboard input not found"
+else
+  puts "[+] Result: " if verbose
+  puts result
+end
