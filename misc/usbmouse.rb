@@ -30,7 +30,7 @@ left    = ARGV.delete '-left'
 right   = ARGV.delete '-right'
 move    = ARGV.delete '-move'
 all     = ARGV.delete('-all') || [left, right, move].none?
-output  = (i = ARGV.index '-o') ? ARGV.slice!(2,2).last : 'mouse.png'
+output  = (i = ARGV.index '-o') ? ARGV.slice!(i,2).last : 'mouse.png'
 
 if ARGV[0] 
   cmd = "tshark -r #{ARGV[0]} -T fields -e usb.capdata #{force ? "2>&-" : ""}"
