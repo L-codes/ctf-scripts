@@ -9,6 +9,9 @@ compress/
 pcap/
   usbkeyboard.rb       - USB 协议提取键盘输入内容
   usbmouse.rb          - USB 协议提取鼠标输入转为图片轨迹图
+
+stego/
+  stegosaurus.py       - .py/.pyc/.pyo 的隐写工具
 ```
 
 ### AWD
