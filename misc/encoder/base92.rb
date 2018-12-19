@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 #
+# Author L
 # base92 encode/decode
 #
 
@@ -44,7 +45,7 @@ class Base92
   private
 
   def self.base92_chr(val)
-    raise 'val must be in (0..91)' unless (1..91).include? val
+    raise 'val must be in (0..91)' unless (0..91).include? val
     return '!' if val == 0
     val <= 61 ? ('#'.ord + val - 1).chr : ('a'.ord + val - 62).chr
   end
