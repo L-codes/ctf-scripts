@@ -84,7 +84,7 @@ if __FILE__ == $PROGRAM_NAME
     abort "No such option '#{ARGV[0]}'" unless 'ed'.index ARGV[0]
     abort "No such file '#{ARGV[1]}'"   unless File.exist? ARGV[1]
 
-    data = File.read(ARGV[1])
+    data = File.read(ARGV[1], encoding: 'utf-8')
     if ARGV[0] == 'e'
 			puts ZWSP.encode data
     else
