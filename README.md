@@ -12,6 +12,7 @@ pcap/
 
 stego/
   stegosaurus.py       - .py/.pyc/.pyo 的隐写工具
+  zwsp-steg.rb         - 信息隐藏在不可见字符中 (3或5个不可见字符编码)
 
 encoder/
   base92.rb            - base92 encode/decode
