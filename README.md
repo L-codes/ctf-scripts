@@ -12,6 +12,9 @@ pcap/
 
 stego/
   stegosaurus.py       - .py/.pyc/.pyo 的隐写工具
+
+encoder/
+  base92.rb            - base92 encode/decode
 ```
 
 ### AWD
