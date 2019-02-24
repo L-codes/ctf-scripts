@@ -15,7 +15,7 @@ banner = %q[
 \___ \\\ V /|  \| | | |_) | '__/ _ \ \/ / | | | \___ \ / __/ _` | '_ \
  ___) || | | |\  | |  __/| | | (_) >  <| |_| |  ___) | (_| (_| | | | |
 |____/ |_| |_| \_| |_|   |_|  \___/_/\_\\\__, | |____/ \___\__,_|_| |_|
-      author: L  version: 2.1.0         |___/
+      author: L  version: 2.2.0         |___/
 
 
 ]
@@ -34,7 +34,7 @@ end
 
 def print_result(records)
   ip_port_map = records.group_by(&:first).transform_values{|x| x.map(&:last) }
-  ips = `nmap -Pn -sn -n -sL #{ARGV.shelljoin}`.b
+  ips = `nmap -Pn -sn -n -sL #{File.file?(ARGV.first) ? "-iL #{ARGV.first}" : ARGV.shelljoin}`.b
   ip_port_map.each do |ip, ports|
     next unless ips.match? /\b#{Regexp.quote(ip)}\b/
     puts "Scan report for #{ip}"
@@ -53,7 +53,7 @@ def start(args)
   sleep 1
 
   nmap = LTools::Nmap.portscan(
-    ARGV,
+    ARGV.size == 1 ? ARGV.first : ARGV,
     ports: args[:ports],
     mode: 'T'
   )
@@ -91,6 +91,7 @@ if __FILE__ == $PROGRAM_NAME
     opts.separator "\nExamples:"
     opts.separator "  ./synproxy-scan.rb 192.168.1.1"
     opts.separator "  ./synproxy-scan.rb -p 1-100 192.168.1.1"
+    opts.separator "  ./synproxy-scan.rb -p 1-100 ip_list.txt"
     opts.separator "  ./synproxy-scan.rb -i eth0 -p 1-20,30-100,3389 192.168.1.1/24 github.com"
   end
   optparser.parse! into: args
