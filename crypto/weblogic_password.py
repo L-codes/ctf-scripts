@@ -29,8 +29,8 @@ ceildiv = lambda n, d: (n + d - 1) // d
 # key used by all Weblogic servers
 WEBLOGIC_MASTER_KEY = "0xccb97558940b82637c8bec3c770f86fa3a391a56"
 
-RE_AES =  re.compile(r'\{AES\}(.*)<\/')
-RE_3DES = re.compile(r'\{3DES\}(.*)<\/')
+RE_AES =  re.compile(r'([^>]+?)<\/[^>]+?>\s+?<[^>]+?>\{AES\}(.+?)<\/')
+RE_3DES = re.compile(r'([^>]+?)<\/[^>]+?>\s+?<[^>]+?>\{3DES\}(.+?)<\/')
 
 def unpack_helper(fmt, data):
     size = struct.calcsize(fmt)
@@ -103,21 +103,6 @@ def decrypt_3DES(key, data, salt):
 
     return plain_password
 
-def search_pwd(path):
-    print '[+] Searching in file "%s"' % path
-
-    if not os.path.isfile(path):
-        print '[-] File %s does not exist' % path
-        return []
-
-    with open(path) as fd:
-        data = fd.read()
-
-    pwds = RE_AES.findall(data) + RE_3DES.findall(data)
-    print '[+] Found %s ciphered passwords' % len(pwds)
-
-    return pwds
-
 def main():
     (options, args) = parser.parse_args()
 
@@ -127,9 +112,9 @@ def main():
     datas = []
     if options.cipher_string:
         if options.cipher_string[:5] == '{AES}':
-            datas = [(decrypt_AES, options.cipher_string[5:])]
+            datas = [(decrypt_AES, None, options.cipher_string[5:])]
         elif options.cipher_string[:5] == '{3DES}':
-            datas = [(decrypt_3DES, options.cipher_string[5:])]
+            datas = [(decrypt_3DES, None, options.cipher_string[5:])]
         else:
             parser.error('Cipher string must start with "{AES}" or "{3DES}"')
     elif options.config_file:
@@ -139,7 +124,7 @@ def main():
         with open(options.config_file) as fd:
             f = fd.read()
 
-        datas = map(lambda i: (decrypt_AES, i), RE_AES.findall(f)) + map(lambda i: (decrypt_3DES, i), RE_3DES.findall(f))
+        datas = map(lambda i: (decrypt_AES, i[0], i[1]), RE_AES.findall(f)) + map(lambda i: (decrypt_3DES, i[0], i[1]), RE_3DES.findall(f))
 
         if len(datas) == 0:
             parser.error('No password found in the config file')
@@ -158,13 +143,15 @@ def main():
     #  - 5 rounds
     secret_key = decrypt_pbe_with_and_128rc2_CBC(encryption_key, password, salt, 5)
 
-    for data in datas:
-        decrypt_fn = data[0]
-        # base64 decode the cipher string
-        data = b64decode(data[1])
+    for decrypt_fn, username, ciphertext in datas:
+        data = b64decode(ciphertext)
         # decrypt the passwors using the correct cipher
         plain_password = decrypt_fn(secret_key, data, salt)
-        print "[+] Password:", plain_password
+
+        if username:
+            print "[+] Account: {}\t{}".format(username, plain_password)
+        else:
+            print "[+] Password:", plain_password
 
 if __name__ == "__main__":
     main()
