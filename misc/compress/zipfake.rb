@@ -8,7 +8,6 @@ require 'zip'
 class ZipFake
   # block_size 10M
   def initialize(filename, block_size = 10485760)
-  #def initialize(filename, block_size = 10485760)
     @path  = filename
     @bsize = block_size
     @size  = File.size(filename)
@@ -20,7 +19,7 @@ class ZipFake
     # 否则会造成ZipFake#unlock无法恢复正常文件
     lock_seq = ''
     Zip::File.foreach(@path) do |entry|
-      lock_seq << ( entry.file? ? 9 : 0 )
+      lock_seq << ( entry.file? ? 1 : 0 )
     end
     set_encrypt_bytes(lock_seq)
   end
