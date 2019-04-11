@@ -4,7 +4,7 @@
 #
 require 'zip'
 
-# \x00 no need password; \x09 need password
+# bytes_num & 1 为加密位，0为无加密，1为需要加密
 class ZipFake
   # block_size 10M
   def initialize(filename, block_size = 10485760)

@@ -86,9 +86,9 @@ if __FILE__ == $PROGRAM_NAME
 
     data = File.read(ARGV[1], encoding: 'utf-8')
     if ARGV[0] == 'e'
-			puts ZWSP.encode data
+      puts ZWSP.encode data
     else
-			puts ZWSP.decode data
+      puts ZWSP.decode data
     end
   else
     puts <<~EOF
