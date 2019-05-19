@@ -9,6 +9,7 @@ compress/
 pcap/
   usbkeyboard.rb       --  USB 协议提取键盘输入内容
   usbmouse.rb          --  USB 协议提取鼠标输入转为图片轨迹图
+  tsc_tspl_printer.rb  --  TSC TSPL 打印机，打印数据图片输出 (目前仅支持BITMAP/BAR)
 
 stego/
   stegosaurus.py       --  .py/.pyc/.pyo 的隐写工具
