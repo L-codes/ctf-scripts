@@ -11,7 +11,7 @@ class ZipFake
     @path  = filename
     @bsize = block_size
     @size  = File.size(filename)
-    @mark  = "\x50\x4B\x01\x02"
+    @mark  = "PK\x01\x02"
   end
 
   def lock
@@ -27,6 +27,15 @@ class ZipFake
   def unlock
     lock_seq = []
     set_encrypt_bytes(lock_seq)
+
+    # "PK\x03\x04\x14\x03\x00\x00\b\x00" 第7位的全局加密解锁
+    if File.binread(@path, 7).match? /PK\x03\x04..\x01/
+      open(@path, 'rb+') do |fio|
+        fio.seek(6)
+        fio.putc("\x00")
+      end
+      puts "recover zip magic head encryption bit"
+    end
   end
 
   private
