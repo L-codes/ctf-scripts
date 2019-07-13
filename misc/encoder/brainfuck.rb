@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
+#
+# Author L
+# brainfuck && ook text encode/decode
+#
 
 module Brainfuck
   module_function
