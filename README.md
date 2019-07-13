@@ -17,6 +17,7 @@ stego/
 
 encoder/
   base92.rb            --  base92 encode/decode
+  brainfuck.rb         --  brainfuck && ook text encode/decode
 
 image/
   png_size_recover.rb  --  Png 文件的size恢复
