@@ -26,7 +26,7 @@ if extract_file
   invokeids.each do |invokeid|
     hex_data = `tshark -r '#{pcap_file}' -Y 'mms.invokeID == #{invokeid} && mms.confirmedServiceResponse' -Tfields -e mms.fileData`.chomp.delete(':')
     
-    p [hex_data].pack('H*')
+    puts [hex_data].pack('H*')
   end
 else
   system "tshark -r '#{pcap_file}' -Y mms.FileName_item -Tfields -e mms.FileName_item | sort -u"
