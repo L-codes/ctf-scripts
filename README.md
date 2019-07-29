@@ -41,4 +41,10 @@ scanner/
 pcap/
   ics_analysis.rb      -- ICS Protocol Analysis 字段提取统计
   mms_extract_file.rb  -- Multimedia Messaging Service 文件提取
+  asn_to_hash.rb       !- .asn 数据转换成 Ruby Hash
+```
+
+#### 备注
+```ruby
+!- 为工具开发协助脚本
 ```
