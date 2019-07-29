@@ -39,5 +39,6 @@ scanner/
 ### ICS
 ```ruby
 pcap/
+  ics_analysis.rb      -- ICS Protocol Analysis 字段提取统计
   mms_extract_file.rb  -- Multimedia Messaging Service 文件提取
 ```
