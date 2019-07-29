@@ -28,8 +28,8 @@ if extract_file
 
     if hex_data.empty?
       frame_number = `tshark -r '#{pcap_file}' -Y 'mms.invokeID == #{invokeid} && mms.confirmedServiceRequest' -Tfields -e frame.number`.to_i
+      puts "Not Find Response PDU"
       puts "Request PDU Frame: #{frame_number}"
-      puts "          TCP PDU: #{frame_number + 1}"
     else
       puts [hex_data].pack('H*')
     end
