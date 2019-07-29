@@ -25,8 +25,14 @@ if extract_file
 
   invokeids.each do |invokeid|
     hex_data = `tshark -r '#{pcap_file}' -Y 'mms.invokeID == #{invokeid} && mms.confirmedServiceResponse' -Tfields -e mms.fileData`.chomp.delete(':')
-    
-    puts [hex_data].pack('H*')
+
+    if hex_data.empty?
+      frame_number = `tshark -r '#{pcap_file}' -Y 'mms.invokeID == #{invokeid} && mms.confirmedServiceRequest' -Tfields -e frame.number`.to_i
+      puts "Request PDU Frame: #{frame_number}"
+      puts "          TCP PDU: #{frame_number + 1}"
+    else
+      puts [hex_data].pack('H*')
+    end
   end
 else
   system "tshark -r '#{pcap_file}' -Y mms.FileName_item -Tfields -e mms.FileName_item | sort -u"
