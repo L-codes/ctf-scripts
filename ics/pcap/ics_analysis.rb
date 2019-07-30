@@ -215,7 +215,12 @@ CommentMap = {
 	}
 }
 
-abort 'Usage: ./ics_analysis.rb <pcap_file> <analysis_field>' if ARGV.size != 2
+if ARGV.size != 2
+  puts 'Usage: ./ics_analysis.rb <pcap_file> <analysis_field>'
+  puts 'Common Field'
+  puts CommentMap.keys.map{|x| '  ' + x}
+  exit
+end
 
 pcap_file = ARGV[0]
 field = ARGV[1]
