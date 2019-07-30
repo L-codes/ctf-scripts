@@ -212,7 +212,19 @@ CommentMap = {
 		"0x0000000d" => "CC Connect Confirm",
 		"0x0000000e" => "CR Connect Request",
 		"0x0000000f" => "DT Data",
-	}
+	},
+	"ams.cmdid" => {
+		"0" =>  "Invalid",
+		"1" =>  "ADS Read Device Info",
+		"2" =>  "ADS Read",
+		"3" =>  "ADS Write",
+		"4" =>  "ADS Read State",
+		"5" =>  "ADS Write Control",
+		"6" =>  "ADS Add Device Notification",
+		"7" =>  "ADS Delete Device Notification",
+		"8" =>  "ADS Device Notification",
+		"9" =>  "ADS Read Write",
+  }
 }
 
 if ARGV.size != 2
