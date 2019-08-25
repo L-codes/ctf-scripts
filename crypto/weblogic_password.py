@@ -1,7 +1,7 @@
 #!/usr/bin/env python
+# /console/ login account
 # -i ~/wls<VERSION>/user_projects/domains/<DOMAIN_NAME>/security/SerializedSystemIni.dat
 # -f ~/wls<VERSION>/user_projects/domains/<DOMAIN_NAME>/config/config.xml
-from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Cipher import ARC2, AES, DES3
 from Crypto.Hash import SHA
 
