@@ -27,7 +27,8 @@ image/
 
 ### CRYPTO
 ```ruby
-weblogic_password.py      --  Weblogic 密码解密脚本
+weblogic_password.rb      --  Weblogic 密码解密脚本
+weblogic_password.py      --  Weblogic 密码解密脚本(依赖旧版Cipher)
 ```
 
 ### AWD
