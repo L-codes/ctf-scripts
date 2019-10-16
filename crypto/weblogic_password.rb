@@ -8,7 +8,8 @@ require 'openssl'
 require 'bindata'
 
 WEBLOGIC_MASTER_KEY = '0xccb97558940b82637c8bec3c770f86fa3a391a56'
-RE = %r'([^>]+?)<\/[^>]+?>\s+?<[^>]+?>\{(AES|3DES)\}(.+?)<\/'
+#RE = %r'([^>]+?)<\/[^>]+?>\s+?<[^>]+?>\{(AES|3DES)\}(.+?)<\/'
+RE = %r'([^>\s]+?)(?:<\/[^>]+?>\s+)+?<[^>]+?>\{(AES|3DES)\}(.+?)<\/'
 CipherRE = %r'()\{(AES|3DES)\}(.+?)$'
 
 
@@ -121,8 +122,13 @@ if __FILE__ == $PROGRAM_NAME
 
     if File.file?(opt)
       config = File.read opt
-      server_port = config.match(/<listen-port>(\d+)<\/listen-port>/)[1]
-      puts "[*] Server Port: #{server_port}"
+
+      server_port = config.match(/<listen-port>(\d+)<\/listen-port>/)
+      puts "[*] Server Port: #{server_port[1]}" if server_port
+
+      jdbc = config.each_line.grep /jdbc:/
+      puts "[*] JDBC: #{jdbc[0].gsub(/<.*?>/, '')}" if jdbc.size > 0
+
       accounts = config.scan(RE)
     else
       accounts = opt.scan(CipherRE)
