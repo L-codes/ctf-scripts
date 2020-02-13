@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 __author__ = 'L'
 __date__ = '2017-08-11'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 import warnings
 import logging
@@ -27,7 +27,7 @@ def lfilter(pk):
         open_ports.add(port)
         return True
 
-def SYNProxy_filter(ip_src):
+def SYNProxy_filter():
     sniff(lfilter=lfilter, prn=prn, store=0)
 
 
@@ -94,7 +94,8 @@ if __name__ == '__main__':
     print(banner)
     open_ports = set()
     try:
-        Thread(SYNProxy_filter, ip)
+        ip_src = ip
+        Thread(SYNProxy_filter)
         start = time.time()
         print('Strting SYN Proxy Scan {} at {}'.format(__version__, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
         print('\nScan report for {}\nPORT  STATE SERVICE'.format(ip))
