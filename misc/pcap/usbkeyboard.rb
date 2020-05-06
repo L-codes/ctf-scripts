@@ -36,7 +36,7 @@ end
 
 result = ''
 data.each_line do |line|
-  if line =~ /^(00|02|20):\h{2}:(\h{2})(?::\h{2}){5}$/   # TODO Confirm <shift> code
+  if line =~ /^(00|02|20):?\h{2}:?(\h{2})(?::?\h{2}){5}$/   # TODO Confirm <shift> code
     shift, key = $1, $2
     keyboard = ( shift == '00' ? NormalKeys[key] : ShiftKeys[key] )
     if keyboard
