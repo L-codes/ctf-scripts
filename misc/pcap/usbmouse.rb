@@ -46,7 +46,7 @@ tempfile = Tempfile.new('usb_mouse_data')
 
 posx, posy = 0, 0
 data.each_line do |line|
-  if line =~ /^(00|01|02):(\h{2}):(\h{2}):\h{2}$/
+  if line =~ /^(00|01|02):?(\h{2}):?(\h{2}):?\h{2}$/
     action, x, y = $1, $2.to_i(16), $3.to_i(16)
     x -= 256 if x > 127
     y -= 256 if y > 127
