@@ -29,6 +29,7 @@ image/
 ```ruby
 weblogic_password.rb      --  Weblogic 密码解密脚本
 weblogic_password.py      --  Weblogic 密码解密脚本(依赖旧版Cipher)
+shiro_rememberMe_decrypt.rb -- Shiro Cookie rememberMe 解密
 ```
 
 ### AWD
