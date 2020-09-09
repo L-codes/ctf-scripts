@@ -129,26 +129,27 @@ yNeUgSzL/CfiWw1GALg6Ag==
 yeAAo1E8BOeAYfBlm4NG9Q==
 }
 
-def aes_decrypt(key, payload)
+def aes_decrypt(mode, key, payload)
 	iv = payload[0,16]
   data = payload[16..-1]
-	aes = OpenSSL::Cipher.new('aes-128-cbc')
+	aes = OpenSSL::Cipher.new("aes-128-#{mode}")
 	aes.decrypt
+  aes.iv_len = 16 if mode == :gcm
   aes.iv = iv
 	aes.key = key.unpack1('m0')
-	aes.update(payload) + (aes.final rescue '')
+	aes.update(data) + (aes.final rescue '')
 end
 
 mark_head = "\xAC\xED\x00\x05".b
 found = false
 Keys.each do |key|
-  begin
-    plaintext = aes_decrypt(key, cipher)
+  [:cbc, :gcm].each do |mode|
+    plaintext = aes_decrypt(mode, key, cipher)
     if (index = plaintext.index(mark_head))
       plaintext = plaintext[index..-1]
-      STDERR.puts "key: #{key}"
+      STDERR.puts "Mode: #{mode.upcase}, Key: #{key}"
       puts plaintext
-			found = true
+      found = true
       break
     end
   rescue => e
