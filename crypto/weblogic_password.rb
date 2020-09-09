@@ -144,6 +144,9 @@ if __FILE__ == $PROGRAM_NAME
 
     config.xml:
       wls<VERSION>/user_projects/domains/<DOMAIN_NAME>/config/config.xml
+
+    ciphertext:
+      security/boot.properties
     EOF
   end
 end
