@@ -9,8 +9,8 @@ require 'bindata'
 
 WEBLOGIC_MASTER_KEY = '0xccb97558940b82637c8bec3c770f86fa3a391a56'
 #RE = %r'([^>]+?)<\/[^>]+?>\s+?<[^>]+?>\{(AES|3DES)\}(.+?)<\/'
-RE = %r'([^>\s]+?)(?:<\/[^>]+?>\s+)+?<[^>]+?>\{(AES|3DES)\}(.+?)<\/'
-CipherRE = %r'()\{(AES|3DES)\}(.+?)$'
+RE = %r'([^>\s]+?)(?:<\/[^>]+?>\s+)+?<[^>]+?>\{(AES|AES256|3DES)\}(.+?)<\/'
+CipherRE = %r'()\{(AES|AES256|3DES)\}(.+?)$'
 
 
 class SerializedSystemIni < BinData::Record
@@ -104,6 +104,8 @@ def weblogic_decrypt(ini_file, accounts)
       case algo
       when 'AES'
         decrypt('aes-128-cbc', secret_key, data[0,16], data[16..-1])
+      when 'AES256'
+        decrypt('aes-256-cbc', secret_key, data[0,16], data[16..-1])
       when '3DES'
         decrypt('des3', secret_key, salt[0,4] * 2, data)
       end
