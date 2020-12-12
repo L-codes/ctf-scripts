@@ -110,7 +110,7 @@ def weblogic_decrypt(ini_file, accounts)
         decrypt('des3', secret_key, salt[0,4] * 2, data)
       end
     if username.empty?
-      puts "[+] Password: #{passwd}"
+      puts "[+] Plaintext: #{passwd}"
     else
       puts "[+] Account: #{username}\t#{passwd}"
     end

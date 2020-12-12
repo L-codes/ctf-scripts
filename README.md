@@ -27,8 +27,8 @@ image/
 
 ### CRYPTO
 ```ruby
-weblogic_password.rb      --  Weblogic 密码解密脚本
-weblogic_password.py      --  Weblogic 密码解密脚本(依赖旧版Cipher)
+weblogic_password.rb      --  Weblogic 密码解密脚本 (支持{AES256})
+weblogic_password.py      --  旧版 Weblogic 密码解密脚本 (该版本停止维护; 依赖旧版Cipher)
 shiro_rememberMe_decrypt.rb -- Shiro Cookie rememberMe 解密
 ```
 
