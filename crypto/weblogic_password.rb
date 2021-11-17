@@ -82,7 +82,11 @@ end
 
 def read_ini_file(filename)
   io = open(filename, 'rb')
-  r = SerializedSystemIni.read(io)
+  begin
+    r = SerializedSystemIni.read(io)
+  rescue
+    abort 'SerializedSystemIni.dat Error' 
+  end
   io.close
   [r.salt, r.encryption.ini_key]
 end
